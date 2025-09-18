@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学校直播</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <header>
+                <h1>{{ ui.title }}</h1>
+                <div class="time-info">
+                    <p>当前时间：{{ currentTime }}</p>
+                    <p class="status" :class="{'available': isAvailable, 'unavailable': !isAvailable}">
+                        {{ statusText }}
+                    </p>
+                </div>
+            </header>
+            
+            <main>
+                <!-- 直播源选择区域 -->
+                <div v-if="isAvailable" class="stream-selector">
+                    <h3>📺 选择直播源</h3>
+                    <div class="stream-buttons">
+                        <button 
+                            v-for="(url, name) in availableStreams" 
+                            :key="name"
+                            @click="switchStream(name, url)"
+                            :class="{'active': currentStreamName === name}"
+                            class="stream-btn"
+                        >
+                            {{ getStreamDisplayName(name) }}
+                        </button>
+                    </div>
+                </div>
+                
+                <div v-if="isAvailable" class="video-container">
+                    <video 
+                        ref="videoPlayer" 
+                        controls 
+                        autoplay
+                        muted
+                        class="video-player"
+                        @error="handleVideoError"
+                        crossorigin="anonymous"
+                    ></video>
+                    <div v-if="loading" class="loading">
+                        <div class="spinner"></div>
+                        <p>正在加载直播...</p>
+                    </div>
+                </div>
+                
+                <div v-else class="unavailable-message">
+                    <div class="message-box">
+                        <h2>⏰ 直播暂未开放</h2>
+                        <p>直播时间：上午 {{ schedule.startHour }}:{{ schedule.startMinute.toString().padStart(2, '0') }} - 下午 {{ schedule.endHour }}:{{ schedule.endMinute.toString().padStart(2, '0') }}</p>
+                        <p>当前时间：{{ currentTime }}</p>
+                        <p class="countdown">{{ countdownText }}</p>
+                    </div>
+                </div>
+                
+                <!-- 错误提示 -->
+                <div v-if="errorMessage" class="error-message">
+                    <p>{{ errorMessage }}</p>
+                </div>
+            </main>
+            
+            <footer>
+                <p>{{ ui.subtitle }}</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

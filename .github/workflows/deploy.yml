@@ -1,0 +1,47 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Replace secrets in config.js
+        run: |
+          # 替换直播源地址占位符
+          sed -i "s|{{CLASSROOM1_URL}}|${{ secrets.CLASSROOM1_URL }}|g" config.js
+          sed -i "s|{{CLASSROOM2_URL}}|${{ secrets.CLASSROOM2_URL }}|g" config.js
+          
+          # 验证替换是否成功
+          echo "配置替换完成，检查结果："
+          grep -E "(classroom1|classroom2)" config.js
+          
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
