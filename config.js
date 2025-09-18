@@ -12,7 +12,7 @@ const STREAM_CONFIG = {
     schedule: {
         startHour: 8,
         startMinute: 30,
-        endHour: 15,
+        endHour: 17,
         endMinute: 30
     },
     
