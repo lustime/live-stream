@@ -21,8 +21,6 @@ createApp({
     
     mounted() {
         // 初始化
-        this.updateTime();
-        setInterval(() => this.updateTime(), 1000);
         
         // 初始化直播源配置
         this.initializeStreams();
@@ -35,6 +33,8 @@ createApp({
             this.currentStreamName = 'debug';
             console.log('调试模式：使用URL参数中的直播源');
         }
+		this.updateTime();
+        setInterval(() => this.updateTime(), 1000);
     },
     
     methods: {
