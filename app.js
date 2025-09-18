@@ -197,6 +197,7 @@ createApp({
                     backBufferLength: 90,
                     xhrSetup: (xhr, url) => {
                         xhr.withCredentials = false;
+						xhr.setRequestHeader('User-Agent', 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.60(0x18003c32) NetType/4G Language/zh_CN miniProgram/wxb2ef61a897ab2cb0');
                     }
                 });
                 
